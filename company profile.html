@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobPortal — Company Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --navy: #0f1c4d;
+    --navy-active: #1e3a8a;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --bg: #f3f5f9;
+    --card: #ffffff;
+    --text-dark: #1e2432;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body{
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+  }
+
+  .layout{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:230px;
+    background: var(--navy);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    flex-shrink:0;
+  }
+
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    padding:22px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  .brand-icon{
+    width:36px; height:36px;
+    background:#fff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--navy); font-size:16px;
+  }
+
+  .brand-text h1{ font-size:16px; font-weight:700; }
+  .brand-text span{ font-size:11px; color:#9aa5c9; }
+
+  .nav{ flex:1; padding:18px 12px; display:flex; flex-direction:column; gap:4px; }
+
+  .nav a{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 14px; border-radius:8px;
+    color:#c7cde3; text-decoration:none; font-size:14px;
+    transition: background .15s ease, color .15s ease;
+  }
+
+  .nav a i{ width:18px; text-align:center; font-size:14px; }
+  .nav a:hover{ background: rgba(255,255,255,0.06); color:#fff; }
+  .nav a.active{ background: var(--navy-active); color:#fff; font-weight:600; }
+
+  /* ---------- MAIN ---------- */
+  .main{ flex:1; display:flex; flex-direction:column; }
+
+  .topbar{
+    height:64px; background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:flex-end;
+    gap:16px; padding:0 28px;
+  }
+
+  .topbar .company-name{ font-size:14px; font-weight:600; color:var(--text-dark); }
+  .topbar .bell{ color:var(--text-muted); font-size:16px; cursor:pointer; }
+
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background: var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700;
+  }
+
+  .content{ padding:28px 32px; flex:1; }
+
+  .content-header{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:20px;
+  }
+
+  .content-header h2{ font-size:20px; font-weight:700; }
+
+  .btn-edit, .btn-save{
+    background: var(--blue); color:#fff; border:none;
+    padding:10px 18px; border-radius:8px; font-size:13px; font-weight:600;
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    transition: background .15s ease;
+  }
+
+  .btn-edit:hover, .btn-save:hover{ background: var(--blue-dark); }
+
+  .btn-cancel{
+    background:#fff; color:var(--text-dark); border:1px solid var(--border);
+    padding:10px 18px; border-radius:8px; font-size:13px; font-weight:600;
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    transition: background .15s ease;
+  }
+
+  .btn-cancel:hover{ background:#f3f4f6; }
+
+  /* ---------- PROFILE CARD (view mode) ---------- */
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--border);
+    padding:32px;
+    display:flex; gap:40px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  .logo-box{
+    width:180px; height:180px; flex-shrink:0;
+    border:1px solid var(--border); border-radius:10px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px;
+  }
+
+  .logo-box i{ font-size:44px; color:var(--blue); }
+  .logo-box .logo-name{ font-weight:700; font-size:15px; color:var(--text-dark); text-align:center; padding:0 10px; }
+  .logo-box .logo-sub{ font-size:9px; letter-spacing:1.5px; color:var(--text-muted); }
+
+  .details{
+    flex:1;
+    display:grid;
+    grid-template-columns: 140px 16px 1fr;
+    row-gap:18px;
+    font-size:14px;
+  }
+
+  .details .label{ color:var(--text-dark); font-weight:500; }
+  .details .colon{ color:var(--text-muted); }
+  .details .value{ color:var(--text-muted); line-height:1.5; }
+
+  /* ---------- FORM (edit mode) ---------- */
+  .form-card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--border);
+    padding:32px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  .form-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px 24px;
+  }
+
+  .form-group{ display:flex; flex-direction:column; gap:6px; }
+  .form-group.full{ grid-column: 1 / -1; }
+
+  .form-group label{ font-size:13px; font-weight:600; color:var(--text-dark); }
+
+  .form-group input,
+  .form-group textarea{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text-dark);
+    outline:none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus{
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  }
+
+  .form-group textarea{ resize:vertical; min-height:90px; }
+
+  .form-actions{
+    display:flex; justify-content:flex-end; gap:12px;
+    margin-top:26px; padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed; top:20px; right:20px;
+    background: var(--green); color:#fff;
+    padding:12px 20px; border-radius:8px;
+    font-size:13px; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(140%);
+    transition: transform .25s ease;
+    z-index:100;
+  }
+
+  .toast.show{ transform: translateX(0); }
+
+  .hidden{ display:none; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 820px){
+    .sidebar{ width:76px; }
+    .brand-text, .nav a span{ display:none; }
+    .nav a{ justify-content:center; }
+    .card{ flex-direction:column; align-items:flex-start; }
+    .details{ grid-template-columns: 110px 12px 1fr; width:100%; }
+    .form-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-briefcase"></i></div>
+      <div class="brand-text">
+        <h1>JobPortal</h1>
+        <span>Employer</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+      <a href="#" class="active"><i class="fa-solid fa-id-card"></i><span>Company Profile</span></a>
+      <a href="#"><i class="fa-solid fa-briefcase"></i><span>Job New Job</span></a>
+      <a href="#"><i class="fa-solid fa-users"></i><span>Applicants</span></a>
+      <a href="#"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <span class="company-name" id="topbar-name">TechSoft Solutions</span>
+      <i class="fa-regular fa-bell bell"></i>
+      <div class="avatar" id="topbar-avatar">TS</div>
+    </header>
+
+    <main class="content">
+
+      <!-- ===================== VIEW MODE ===================== -->
+      <div id="view-mode">
+        <div class="content-header">
+          <h2>Company Profile</h2>
+          <button class="btn-edit" id="edit-btn"><i class="fa-solid fa-pen"></i> Edit Profile</button>
+        </div>
+
+        <section class="card">
+          <div class="logo-box">
+            <i class="fa-solid fa-cube"></i>
+            <div class="logo-name" id="logo-name">TechSoft</div>
+            <div class="logo-sub">SOLUTIONS</div>
+          </div>
+
+          <div class="details">
+            <div class="label">Company Name</div><div class="colon">:</div><div class="value" id="val-companyName"></div>
+            <div class="label">Industry</div><div class="colon">:</div><div class="value" id="val-industry"></div>
+            <div class="label">Website</div><div class="colon">:</div><div class="value" id="val-website"></div>
+            <div class="label">Email</div><div class="colon">:</div><div class="value" id="val-email"></div>
+            <div class="label">Phone</div><div class="colon">:</div><div class="value" id="val-phone"></div>
+            <div class="label">Address</div><div class="colon">:</div><div class="value" id="val-address"></div>
+            <div class="label">About Us</div><div class="colon">:</div><div class="value" id="val-about"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===================== EDIT MODE ===================== -->
+      <div id="edit-mode" class="hidden">
+        <div class="content-header">
+          <h2>Edit Company Profile</h2>
+        </div>
+
+        <form class="form-card" id="edit-form">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="companyName">Company Name</label>
+              <input type="text" id="companyName" required>
+            </div>
+
+            <div class="form-group">
+              <label for="industry">Industry</label>
+              <input type="text" id="industry" required>
+            </div>
+
+            <div class="form-group">
+              <label for="website">Website</label>
+              <input type="text" id="website" placeholder="www.example.com">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone">
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address">
+            </div>
+
+            <div class="form-group full">
+              <label for="about">About Us</label>
+              <textarea id="about"></textarea>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" id="cancel-btn"><i class="fa-solid fa-xmark"></i> Cancel</button>
+            <button type="submit" class="btn-save"><i class="fa-solid fa-check"></i> Save Changes</button>
+          </div>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> Profile updated</div>
+
+<script>
+  // ---- In-memory data store. Swap this for a fetch() to your backend later. ----
+  let profile = {
+    companyName: "TechSoft Solutions",
+    industry: "IT Services",
+    website: "www.techsoft.com",
+    email: "hr@techsoft.com",
+    phone: "+91 9876543210",
+    address: "Tech Park, Calicut, Kerala, India",
+    about: "TechSoft Solutions is a leading IT company providing innovative software solutions."
+  };
+
+  const viewMode = document.getElementById("view-mode");
+  const editMode = document.getElementById("edit-mode");
+  const toast = document.getElementById("toast");
+
+  // Paints the current `profile` object onto the view-mode card + topbar.
+  function renderProfile() {
+    document.getElementById("val-companyName").textContent = profile.companyName;
+    document.getElementById("val-industry").textContent   = profile.industry;
+    document.getElementById("val-website").textContent    = profile.website;
+    document.getElementById("val-email").textContent      = profile.email;
+    document.getElementById("val-phone").textContent      = profile.phone;
+    document.getElementById("val-address").textContent    = profile.address;
+    document.getElementById("val-about").textContent      = profile.about;
+
+    document.getElementById("topbar-name").textContent = profile.companyName;
+    document.getElementById("logo-name").textContent   = profile.companyName;
+
+    const initials = profile.companyName
+      .split(" ")
+      .map(w => w[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+    document.getElementById("topbar-avatar").textContent = initials;
+  }
+
+  // Fills the form inputs with the current `profile` values.
+  function fillForm() {
+    document.getElementById("companyName").value = profile.companyName;
+    document.getElementById("industry").value    = profile.industry;
+    document.getElementById("website").value     = profile.website;
+    document.getElementById("email").value       = profile.email;
+    document.getElementById("phone").value       = profile.phone;
+    document.getElementById("address").value     = profile.address;
+    document.getElementById("about").value       = profile.about;
+  }
+
+  function showEditMode() {
+    fillForm();
+    viewMode.classList.add("hidden");
+    editMode.classList.remove("hidden");
+  }
+
+  function showViewMode() {
+    editMode.classList.add("hidden");
+    viewMode.classList.remove("hidden");
+  }
+
+  document.getElementById("edit-btn").addEventListener("click", showEditMode);
+  document.getElementById("cancel-btn").addEventListener("click", showViewMode);
+
+  document.getElementById("edit-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    profile = {
+      companyName: document.getElementById("companyName").value.trim(),
+      industry:    document.getElementById("industry").value.trim(),
+      website:     document.getElementById("website").value.trim(),
+      email:       document.getElementById("email").value.trim(),
+      phone:       document.getElementById("phone").value.trim(),
+      address:     document.getElementById("address").value.trim(),
+      about:       document.getElementById("about").value.trim()
+    };
+
+    renderProfile();
+    showViewMode();
+
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2200);
+  });
+
+  // Initial paint on page load.
+  renderProfile();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobPortal — Applicants</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --navy: #0f1c4d;
+    --navy-active: #1e3a8a;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --bg: #f3f5f9;
+    --card: #ffffff;
+    --text-dark: #1e2432;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --green-text: #15803d;
+    --red: #dc2626;
+    --red-bg: #fee2e2;
+    --red-text: #b91c1c;
+    --gray-bg: #f1f2f4;
+    --gray-text: #6b7280;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body{
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+  }
+
+  .layout{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:230px;
+    background: var(--navy);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    flex-shrink:0;
+  }
+
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    padding:22px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  .brand-icon{
+    width:36px; height:36px;
+    background:#fff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--navy); font-size:16px;
+  }
+
+  .brand-text h1{ font-size:16px; font-weight:700; }
+  .brand-text span{ font-size:11px; color:#9aa5c9; }
+
+  .nav{ flex:1; padding:18px 12px; display:flex; flex-direction:column; gap:4px; }
+
+  .nav a{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 14px; border-radius:8px;
+    color:#c7cde3; text-decoration:none; font-size:14px;
+    transition: background .15s ease, color .15s ease;
+    cursor:pointer;
+  }
+
+  .nav a i{ width:18px; text-align:center; font-size:14px; }
+  .nav a:hover{ background: rgba(255,255,255,0.06); color:#fff; }
+  .nav a.active{ background: var(--navy-active); color:#fff; font-weight:600; }
+
+  /* ---------- MAIN ---------- */
+  .main{ flex:1; display:flex; flex-direction:column; }
+
+  .topbar{
+    height:64px; background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; padding:0 28px;
+  }
+
+  .hamburger{ background:none; border:none; cursor:pointer; color:var(--text-dark); font-size:18px; }
+
+  .topbar-right{ display:flex; align-items:center; gap:10px; }
+
+  .topbar .company-name{
+    font-size:14px; font-weight:600; color:var(--text-dark);
+    display:flex; align-items:center; gap:6px; cursor:pointer;
+  }
+
+  .topbar .company-name i{ font-size:11px; color:var(--text-muted); }
+
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background: var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700;
+  }
+
+  .content{ padding:28px 32px; flex:1; }
+
+  .content-header{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+
+  .content-header h2{ font-size:18px; font-weight:700; color:var(--text-dark); }
+
+  .job-select{
+    border:none;
+    background:none;
+    color: var(--blue);
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    outline:none;
+    appearance:none; -webkit-appearance:none;
+    padding-right:20px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%232563eb'/></svg>");
+    background-repeat:no-repeat;
+    background-position: right 2px center;
+  }
+
+  /* ---------- TABLE ---------- */
+  .table-card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    overflow:hidden;
+  }
+
+  table{ width:100%; border-collapse:collapse; }
+
+  thead th{
+    text-align:left;
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-muted);
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+  }
+
+  tbody td{
+    padding:16px 20px;
+    font-size:14px;
+    color:var(--text-dark);
+    border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:#fafbfc; }
+
+  .name-cell{ font-weight:600; }
+  .email-cell{ color:var(--text-muted); }
+
+  .resume-link{
+    color: var(--blue);
+    text-decoration:none;
+    font-weight:600;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-size:14px;
+    font-family:inherit;
+  }
+  .resume-link:hover{ text-decoration:underline; }
+
+  .actions-cell{ display:flex; gap:10px; align-items:center; }
+
+  .btn-accept, .btn-reject{
+    border:none;
+    padding:6px 16px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition: background .15s ease, opacity .15s ease;
+  }
+
+  .btn-accept{ background: var(--green-bg); color: var(--green-text); }
+  .btn-accept:hover{ background:#bbf7d0; }
+
+  .btn-reject{ background: var(--red-bg); color: var(--red-text); }
+  .btn-reject:hover{ background:#fecaca; }
+
+  .status-wrap{ display:flex; align-items:center; gap:10px; }
+
+  .badge{
+    display:inline-block;
+    font-size:12px;
+    font-weight:600;
+    padding:5px 14px;
+    border-radius:999px;
+  }
+  .badge.accepted{ background: var(--green-bg); color: var(--green-text); }
+  .badge.rejected{ background: var(--red-bg); color: var(--red-text); }
+
+  .undo-link{
+    font-size:12px;
+    color: var(--text-muted);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+  }
+  .undo-link:hover{ color: var(--text-dark); }
+
+  .empty-state{
+    padding:60px 20px;
+    text-align:center;
+    color:var(--text-muted);
+    font-size:14px;
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed; top:20px; right:20px;
+    background: var(--green); color:#fff;
+    padding:12px 20px; border-radius:8px;
+    font-size:13px; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(140%);
+    transition: transform .25s ease;
+    z-index:100;
+  }
+  .toast.show{ transform: translateX(0); }
+  .toast.reject{ background: var(--red); }
+  .toast.info{ background: var(--text-dark); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px){
+    .table-card{ overflow-x:auto; }
+    table{ min-width:680px; }
+  }
+
+  @media (max-width: 820px){
+    .sidebar{ width:76px; }
+    .brand-text, .nav a span{ display:none; }
+    .nav a{ justify-content:center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-briefcase"></i></div>
+      <div class="brand-text">
+        <h1>JobPortal</h1>
+        <span>Employer</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+      <a><i class="fa-solid fa-id-card"></i><span>Company Profile</span></a>
+      <a><i class="fa-solid fa-plus"></i><span>Post New Job</span></a>
+      <a><i class="fa-solid fa-list"></i><span>Job Postings</span></a>
+      <a class="active"><i class="fa-solid fa-users"></i><span>Applicants</span></a>
+      <a><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-right">
+        <span class="company-name">TechSoft Solutions <i class="fa-solid fa-chevron-down"></i></span>
+        <div class="avatar">TS</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content-header">
+        <h2>Applicants for:</h2>
+        <select class="job-select" id="job-select"></select>
+      </div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Experience</th>
+              <th>Applied On</th>
+              <th>Resume</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="applicants-tbody">
+            <!-- rows rendered by JS -->
+          </tbody>
+        </table>
+        <div class="empty-state hidden" id="empty-state">No applicants for this job yet.</div>
+      </div>
+    </main>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toast-msg"></span></div>
+
+<script>
+  // ---- In-memory data, seeded per job. Swap for a real API later. ----
+  let applicantsByJob = {
+    "Software Developer": [
+      { id:1, name:"Akhil Kumar",   email:"akhil@gmail.com",   experience:"2 Years", appliedOn:"21 May 2024", status:"pending" },
+      { id:2, name:"Sneha Nair",    email:"sneha@gmail.com",   experience:"3 Years", appliedOn:"21 May 2024", status:"pending" },
+      { id:3, name:"Rohit Das",     email:"rohitdas@gmail.com",experience:"1 Year",  appliedOn:"22 May 2024", status:"pending" },
+      { id:4, name:"Anjali Menon",  email:"anjali@gmail.com",  experience:"2 Years", appliedOn:"22 May 2024", status:"pending" },
+      { id:5, name:"Vishnu Prasad", email:"vishnu@gmail.com",  experience:"4 Years", appliedOn:"23 May 2024", status:"pending" }
+    ],
+    "UI/UX Designer": [
+      { id:6, name:"Meera Pillai",  email:"meera@gmail.com",   experience:"3 Years", appliedOn:"19 May 2024", status:"pending" },
+      { id:7, name:"Arjun Nambiar", email:"arjun@gmail.com",   experience:"2 Years", appliedOn:"20 May 2024", status:"pending" }
+    ],
+    "Digital Marketing Executive": [
+      { id:8, name:"Divya Raj",     email:"divya@gmail.com",   experience:"1 Year",  appliedOn:"16 May 2024", status:"pending" }
+    ],
+    "HR Executive": [],
+    "Content Writer": []
+  };
+
+  let currentJob = "Software Developer";
+
+  const jobSelect = document.getElementById("job-select");
+  const tbody = document.getElementById("applicants-tbody");
+  const emptyState = document.getElementById("empty-state");
+  const toast = document.getElementById("toast");
+  const toastMsg = document.getElementById("toast-msg");
+
+  // Populate the job dropdown
+  Object.keys(applicantsByJob).forEach(jobTitle => {
+    const opt = document.createElement("option");
+    opt.value = jobTitle;
+    opt.textContent = jobTitle;
+    jobSelect.appendChild(opt);
+  });
+  jobSelect.value = currentJob;
+
+  jobSelect.addEventListener("change", function () {
+    currentJob = this.value;
+    renderTable();
+  });
+
+  function showToast(message, type) {
+    toastMsg.textContent = message;
+    toast.classList.remove("reject", "info");
+    if (type) toast.classList.add(type);
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2200);
+  }
+
+  function renderTable() {
+    const applicants = applicantsByJob[currentJob] || [];
+    tbody.innerHTML = "";
+
+    if (applicants.length === 0) {
+      emptyState.classList.remove("hidden");
+      return;
+    }
+    emptyState.classList.add("hidden");
+
+    applicants.forEach(a => {
+      const tr = document.createElement("tr");
+
+      let actionsHtml;
+      if (a.status === "pending") {
+        actionsHtml = `
+          <button class="btn-accept" data-id="${a.id}" data-action="accept">Accept</button>
+          <button class="btn-reject" data-id="${a.id}" data-action="reject">Reject</button>
+        `;
+      } else {
+        const badgeClass = a.status === "accepted" ? "accepted" : "rejected";
+        const badgeText = a.status === "accepted" ? "Accepted" : "Rejected";
+        actionsHtml = `
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          <button class="undo-link" data-id="${a.id}" data-action="undo">Undo</button>
+        `;
+      }
+
+      tr.innerHTML = `
+        <td class="name-cell">${escapeHtml(a.name)}</td>
+        <td class="email-cell">${escapeHtml(a.email)}</td>
+        <td>${escapeHtml(a.experience)}</td>
+        <td>${a.appliedOn}</td>
+        <td><button class="resume-link" data-id="${a.id}" data-action="view">View</button></td>
+        <td class="actions-cell status-wrap">${actionsHtml}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Event delegation for View / Accept / Reject / Undo
+  tbody.addEventListener("click", function (e) {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    const id = Number(btn.dataset.id);
+    const action = btn.dataset.action;
+    const applicants = applicantsByJob[currentJob];
+    const applicant = applicants.find(a => a.id === id);
+    if (!applicant) return;
+
+    if (action === "view") {
+      // No real resume file in this demo — replace with a real URL/modal when wired to a backend.
+      showToast(`Opening resume for ${applicant.name}...`, "info");
+      return;
+    }
+
+    if (action === "accept") {
+      applicant.status = "accepted";
+      showToast(`${applicant.name} has been accepted`);
+    }
+
+    if (action === "reject") {
+      applicant.status = "rejected";
+      showToast(`${applicant.name} has been rejected`, "reject");
+    }
+
+    if (action === "undo") {
+      applicant.status = "pending";
+      showToast(`Decision for ${applicant.name} reset`, "info");
+    }
+
+    renderTable();
+  });
+
+  // Initial render
+  renderTable();
+</script>
+
+</body>
+</html>
