@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logout - JobPortal</title>
+</head> 
+       
+    <style>
+       
+       
+       body{
+            margin:0;
+            display: flex;
+            background-color: whitesmoke;
+        }
+
+
+        .top-headingbox {
+            height: 60px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow:  lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .company-profile {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .company-name {
+          font-size: 14px;
+          color: #333;
+        }
+
+        .profile-icon {
+          width: 35px;
+          height: 35px;
+          background-color: blue;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+
+
+        .sidebar {
+            background-color: rgb(5, 5, 65);
+            width: 220px;
+            height: 650px;
+            padding: 25px 20px;
+            border-radius: 25px;
+        }
+
+        .sidebar h1 {
+            color: white;
+            font-family: poppins;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+            margin: 20px 0;
+            display: block;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background-color:gray;
+        }
+
+            
+        .content {
+            padding: 30px;
+            font-family: Arial;
+            flex:1;
+        }
+
+
+
+        .logout {
+            width: 350px; 
+            margin: 150px auto;
+            padding: 30px; 
+            background-color: white; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            text-align: center; 
+        } 
+            
+        .logout h2 { 
+            margin-bottom: 10px; 
+        } 
+        .logout p { 
+            color: #666; 
+            margin-bottom: 25px; 
+        }
+
+        .button{
+            color: blue;
+        }
+
+    </style>
+<body>    
+     <aside class="sidebar">
+
+        <h1>Job Portal</h1>
+
+        <a href="#">Dashboard</a>
+        <a href="company profile.html">Company Profile</a>
+        <a href="job posting.html">Job Postings</a> 
+        <a href="post new job.html">Post New Job</a>
+        <a href="Applicants.html">Applicants</a>
+        <a href="logout.html">Logout</a>
+        
+
+    </aside>
+
+    <div class="content">
+
+
+      <div class="top-headingbox">
+
+        <div class="company-profile">
+
+         <div class="company-name">
+            ABC Technologies
+         </div>
+
+        <div class="profile-icon">
+            AT
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="logout">
+        <h3>Logout</h3>
+        <p>Are you sure want to logout?</p>
+    
+       <div class="button">
+         <button class="button">Cancel</button>
+         <button class="button">Logout</button>
+       </div>
+    </div>

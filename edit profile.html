@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Page</title>
+
+    <style>
+
+        .form-container{
+            display: flex;
+            gap:20px;
+        }
+
+        
+        .top-headingbox {
+            grid-column: 1/3;
+            height: 60px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow:  lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .company-profile {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .company-name {
+          font-size: 14px;
+          color: #333;
+        }
+
+        .profile-icon {
+          width: 35px;
+          height: 35px;
+          background-color: #1769d1;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+
+
+       h2{
+        background-color: gainsboro;
+        width:1000px;
+        height:50px;
+        border-radius: 15px;
+        padding:5px;
+        display: flex;
+        margin-top: -40px;
+        }
+
+        .main-content h2{
+            grid-column:1/3;
+            padding:20px;
+        }
+
+       .main-content{
+       display: grid;
+       grid-template-columns: 1fr 1fr;
+       column-gap:30px;
+       width:100%;
+       margin-bottom: 50px;
+       }
+        
+        label{
+        display:block;
+       }
+
+       input,select,textarea{
+        width: 100%;
+        padding:5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+       }
+
+    
+
+       .sidebar {
+            background-color: rgb(7, 7, 48);
+            width: 220px;
+            height: 650px;
+            padding: 25px 20px;
+            border-radius: 0 25px 25px 0;
+        }
+
+        .sidebar h1 {
+            color: white;
+            font-family: poppins;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+            margin: 20px 0;
+            display: block;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background-color:gray;
+        }
+
+        .content {
+            padding: 30px;
+            font-family: Arial;
+        }
+
+
+        .button{
+            color: white;
+            padding: 8px 10px;
+            font-size: 15px;
+            text-align: right;
+            cursor:pointer;
+            margin-top: 40px;
+
+        }
+
+      
+        .about{
+            margin-bottom: 70px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <form>
+
+        <div class="form-container">
+
+            <aside class="sidebar">
+
+                <h1>Job Portal</h1>
+
+                <a href="#">Dashboard</a>
+                <a href="company profile.html">Company Profile</a>
+                <a href="job posting.html">Job Postings</a> 
+                <a href="post new job.html">Post New Job</a>
+                <a href="Applicants.html">Applicants</a>
+                <a href="logout.html">Logout</a>
+              
+
+            </aside>
+
+
+            <div class="main-content">
+
+                
+               <div class="top-headingbox">
+
+                 <div class="company-profile">
+
+                   <div class="company-name">
+                      ABC Technologies
+                    </div>
+
+                      <div class="profile-icon">
+                        AT
+                      </div>
+
+                </div>
+
+            </div>
+
+                <h2>Company Profile Edit</h2>
+
+
+                <div>
+                    <label>Company Name</label>
+                    <input type="text" id="CompanyName" value="ABC Technologies">
+                </div>
+
+
+                <div>
+                    <label>Industry</label>
+
+                    <select id="Industry">
+                        <option>IT Services</option>
+                        <option>Marketing</option>
+                        <option>Finance</option>
+                        <option>Retail</option>
+                        <option>Healthcare</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label>Website</label>
+                    <input type="text" id="Website" value="https://www.abc.com">
+                </div>
+
+
+                <div>
+                    <label>Email</label>
+                    <input type="email" id="Email" value="abctech@email.com">
+                </div>
+
+
+                <div>
+                    <label>Phone</label>
+                    <input type="tel" id="Phone" value="1234567890">
+                </div>
+
+
+                <div>
+                    <label>Address</label>
+                    <textarea id="Address">Techpark, Calicut, Kerala, India</textarea>
+                </div>
+
+
+                <div class="about">
+                    <label>About Us</label>
+                    <textarea id="About">ABC Technologies is a leading IT company providing innovative software solutions.</textarea>
+                </div>
+
+
+                <div class="button">
+                    <button class="button" type="button" style="background-color: blue;color: white;">Cancel</button>
+
+                    <button class="button" type="button" style="background-color: blue;color: white;" onclick="savedetails()">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <script>
+
+        function savedetails() {
+
+            let CompanyName = document.getElementById("CompanyName").value;
+            let Industry = document.getElementById("Industry").value;
+            let Website = document.getElementById("Website").value;
+            let Email = document.getElementById("Email").value;
+            let Phone = document.getElementById("Phone").value;
+            let Address = document.getElementById("Address").value;
+            let About = document.getElementById("About").value;
+
+
+            localStorage.setItem("company", CompanyName);
+            localStorage.setItem("industry", Industry);
+            localStorage.setItem("website", Website);
+            localStorage.setItem("email", Email);
+            localStorage.setItem("phone", Phone);
+            localStorage.setItem("address", Address);
+            localStorage.setItem("about", About);
+
+
+            window.location.href = "company profile.html";
+
+        }
+
+    </script>
+
+</body>
+</html>
